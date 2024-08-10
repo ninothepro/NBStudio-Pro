@@ -17,7 +17,8 @@
 
     <div class="controls">
         <input type="file" id="audioUpload" accept="audio/*">
-        <button onclick="addTrack()">Add Track</button>
+        <button onclick="playPause()">Play/Pause</button>
+        <button onclick="stop()">Stop</button>
         <button onclick="cutAudio()">Cut</button>
         <button onclick="copyAudio()">Copy</button>
         <button onclick="pasteAudio()">Paste</button>
@@ -27,13 +28,11 @@
 
     <div class="track-controls">
         <button onclick="muteTrack()">Mute</button>
-        <button onclick="soloTrack()">Solo</button>
         <label for="volumeControl">Volume</label>
         <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
     </div>
 
     <script src="https://unpkg.com/wavesurfer.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.5/Tone.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
