@@ -1,67 +1,81 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let trackCount = 0;
+    let wavesurfer = WaveSurfer.create({
+        container: '#waveform',
+        waveColor: 'violet',
+        progressColor: 'purple',
+        backend: 'WebAudio',
+    });
 
-    // Function to add a new track
+    document.getElementById('audioUpload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            wavesurfer.loadBlob(new Blob([e.target.result]));
+        };
+
+        reader.readAsArrayBuffer(file);
+    });
+
+    // Add track (new instance of wavesurfer)
     window.addTrack = function() {
-        trackCount++;
-        const track = document.createElement('div');
-        track.className = 'track';
-        track.id = `track${trackCount}`;
-        track.innerHTML = `
-            <span>Track ${trackCount}</span>
-            <div class="track-controls">
-                <button onclick="adjustPitch(${trackCount})">Pitch</button>
-                <button onclick="adjustSpeed(${trackCount})">Speed</button>
-                <button onclick="adjustVolume(${trackCount})">Volume</button>
-                <button onclick="removeTrack(${trackCount})">Remove</button>
-            </div>
-        `;
-        document.querySelector('.tracks').appendChild(track);
+        // Example of adding another track with different audio (can be expanded)
+        const newWaveform = WaveSurfer.create({
+            container: '#waveform',
+            waveColor: 'orange',
+            progressColor: 'red',
+            backend: 'WebAudio',
+        });
+        // Load and handle audio for the new track
     };
 
-    // Function to remove a track
-    window.removeTrack = function(trackId) {
-        document.getElementById(`track${trackId}`).remove();
+    // Mute track
+    window.muteTrack = function() {
+        wavesurfer.setMute(!wavesurfer.getMute());
     };
 
-    // Placeholder function for adjusting pitch
-    window.adjustPitch = function(trackId) {
-        console.log(`Adjusting pitch for track ${trackId}`);
+    // Solo track (mute other tracks)
+    window.soloTrack = function() {
+        // Implementation depends on how tracks are structured
     };
 
-    // Placeholder function for adjusting speed
-    window.adjustSpeed = function(trackId) {
-        console.log(`Adjusting speed for track ${trackId}`);
+    // Volume control
+    document.getElementById('volumeControl').addEventListener('input', function() {
+        wavesurfer.setVolume(this.value);
+    });
+
+    // Cut audio
+    window.cutAudio = function() {
+        // Logic to cut audio at the current cursor position
     };
 
-    // Placeholder function for adjusting volume
-    window.adjustVolume = function(trackId) {
-        console.log(`Adjusting volume for track ${trackId}`);
+    // Copy audio
+    window.copyAudio = function() {
+        // Logic to copy selected audio
     };
 
-    // Placeholder function for recording voice-over
-    window.recordVoiceOver = function() {
-        console.log('Recording voice-over');
+    // Paste audio
+    window.pasteAudio = function() {
+        // Logic to paste copied audio at the cursor position
     };
 
-    // Placeholder functions for menu bar
-    window.newProject = function() {
-        console.log('New project created');
-    };
-
+    // Save project (e.g., serialize waveform data)
     window.saveProject = function() {
-        console.log('Project saved');
+        // Save the current state to local storage or file
     };
 
+    // Load project (e.g., deserialize waveform data)
     window.loadProject = function() {
-        console.log('Project loaded');
+        // Load the saved state
     };
 
+    // Export project (e.g., render to file)
     window.exportProject = function() {
-        console.log('Project exported');
+        // Render the project and export as audio file
     };
 
+    // Settings
     window.settings = function() {
-        console.log('Settings opened');
+        // Open settings menu (e.g., audio output settings)
     };
 });
