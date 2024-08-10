@@ -1,11 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Initialize WaveSurfer instance
     let wavesurfer = WaveSurfer.create({
         container: '#waveform',
         waveColor: 'violet',
         progressColor: 'purple',
-        backend: 'WebAudio',
+        backend: 'WebAudio'
     });
 
+    // Load audio file
     document.getElementById('audioUpload').addEventListener('change', function(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -17,65 +19,58 @@ document.addEventListener("DOMContentLoaded", () => {
         reader.readAsArrayBuffer(file);
     });
 
-    // Add track (new instance of wavesurfer)
-    window.addTrack = function() {
-        // Example of adding another track with different audio (can be expanded)
-        const newWaveform = WaveSurfer.create({
-            container: '#waveform',
-            waveColor: 'orange',
-            progressColor: 'red',
-            backend: 'WebAudio',
-        });
-        // Load and handle audio for the new track
+    // Play or Pause the audio
+    window.playPause = function() {
+        wavesurfer.playPause();
     };
 
-    // Mute track
+    // Stop the audio
+    window.stop = function() {
+        wavesurfer.stop();
+    };
+
+    // Mute or Unmute the audio
     window.muteTrack = function() {
-        wavesurfer.setMute(!wavesurfer.getMute());
+        wavesurfer.toggleMute();
     };
 
-    // Solo track (mute other tracks)
-    window.soloTrack = function() {
-        // Implementation depends on how tracks are structured
-    };
-
-    // Volume control
+    // Adjust the volume
     document.getElementById('volumeControl').addEventListener('input', function() {
         wavesurfer.setVolume(this.value);
     });
 
-    // Cut audio
+    // Placeholder for Cut, Copy, Paste functionality
     window.cutAudio = function() {
-        // Logic to cut audio at the current cursor position
+        console.log("Cut functionality is not implemented yet.");
     };
 
-    // Copy audio
     window.copyAudio = function() {
-        // Logic to copy selected audio
+        console.log("Copy functionality is not implemented yet.");
     };
 
-    // Paste audio
     window.pasteAudio = function() {
-        // Logic to paste copied audio at the cursor position
+        console.log("Paste functionality is not implemented yet.");
     };
 
-    // Save project (e.g., serialize waveform data)
+    // Placeholder for project management functions
+    window.newProject = function() {
+        wavesurfer.empty();
+        console.log("New project started.");
+    };
+
     window.saveProject = function() {
-        // Save the current state to local storage or file
+        console.log("Save project functionality is not implemented yet.");
     };
 
-    // Load project (e.g., deserialize waveform data)
     window.loadProject = function() {
-        // Load the saved state
+        console.log("Load project functionality is not implemented yet.");
     };
 
-    // Export project (e.g., render to file)
     window.exportProject = function() {
-        // Render the project and export as audio file
+        console.log("Export project functionality is not implemented yet.");
     };
 
-    // Settings
     window.settings = function() {
-        // Open settings menu (e.g., audio output settings)
+        console.log("Settings functionality is not implemented yet.");
     };
 });
