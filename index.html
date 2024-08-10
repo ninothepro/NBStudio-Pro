@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Producer App</title>
+    <title>Professional Audio Editor</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,15 +16,24 @@
     </div>
 
     <div class="controls">
+        <input type="file" id="audioUpload" accept="audio/*">
         <button onclick="addTrack()">Add Track</button>
-        <button onclick="deleteTrack()">Delete Track</button>
-        <button onclick="recordVoiceOver()">Record Voice Over</button>
+        <button onclick="cutAudio()">Cut</button>
+        <button onclick="copyAudio()">Copy</button>
+        <button onclick="pasteAudio()">Paste</button>
     </div>
 
-    <div class="tracks">
-        <!-- Placeholder for dynamic track elements -->
+    <div id="waveform"></div>
+
+    <div class="track-controls">
+        <button onclick="muteTrack()">Mute</button>
+        <button onclick="soloTrack()">Solo</button>
+        <label for="volumeControl">Volume</label>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
     </div>
 
+    <script src="https://unpkg.com/wavesurfer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.5/Tone.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
