@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-bar {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.menu-bar button {
+    background-color: #444;
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.controls {
+    padding: 20px;
+    background-color: #eee;
+    display: flex;
+    justify-content: space-around;
+}
+
+.tracks {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.track {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.track-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.track-controls button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
