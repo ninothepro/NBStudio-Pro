@@ -1,10 +1,8 @@
 // scripts.js
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let audioBuffer, sourceNode, gainNode, pitchNode, delayNode;
+let audioBuffer, sourceNode, gainNode, pitchNode, echoNode;
 let isPlaying = false;
-let startTime = 0;
-let pauseTime = 0;
 
 // Elements
 const playButton = document.getElementById('play');
@@ -13,8 +11,9 @@ const stopButton = document.getElementById('stop');
 const volumeSlider = document.getElementById('volume');
 const pitchSlider = document.getElementById('pitch');
 const echoCheckbox = document.getElementById('echo');
+const cropButton = document.getElementById('crop');
+const recordButton = document.getElementById('record');
 
-// Load Audio Function
 async function loadAudio(url) {
     const response = await fetch(url);
     const arrayBuffer = await response.arrayBuffer();
@@ -33,53 +32,39 @@ function createAudioGraph() {
     pitchNode = audioContext.createBiquadFilter();
     pitchNode.type = 'allpass';
 
-    delayNode = audioContext.createDelay();
-    delayNode.delayTime.value = echoCheckbox.checked ? 0.3 : 0;
+    echoNode = audioContext.createDelay();
+    echoNode.delayTime.value = echoCheckbox.checked ? 0.5 : 0;
 
     sourceNode.connect(gainNode);
     gainNode.connect(pitchNode);
-    pitchNode.connect(delayNode);
-    delayNode.connect(audioContext.destination);
+    pitchNode.connect(echoNode);
+    echoNode.connect(audioContext.destination);
 
     sourceNode.playbackRate.value = pitchSlider.value;
 }
 
-function playAudio() {
-    if (audioBuffer) {
-        if (isPlaying) return;  // Prevent multiple playbacks
+playButton.addEventListener('click', () => {
+    if (!isPlaying) {
         createAudioGraph();
-
-        startTime = pauseTime ? pauseTime : 0;
-        sourceNode.start(0, startTime);
+        sourceNode.start(0);
         isPlaying = true;
-
-        sourceNode.onended = () => {
-            isPlaying = false;
-            pauseTime = 0;  // Reset pauseTime after playback ends
-        };
     }
-}
+});
 
-function pauseAudio() {
+pauseButton.addEventListener('click', () => {
+    if (audioContext.state === 'running') {
+        audioContext.suspend();
+    } else {
+        audioContext.resume();
+    }
+});
+
+stopButton.addEventListener('click', () => {
     if (isPlaying) {
-        pauseTime = audioContext.currentTime - startTime;
-        sourceNode.stop();
+        sourceNode.stop(0);
         isPlaying = false;
     }
-}
-
-function stopAudio() {
-    if (isPlaying) {
-        sourceNode.stop();
-        isPlaying = false;
-        pauseTime = 0;  // Reset pauseTime when stopped
-    }
-}
-
-// Button Event Listeners
-playButton.addEventListener('click', playAudio);
-pauseButton.addEventListener('click', pauseAudio);
-stopButton.addEventListener('click', stopAudio);
+});
 
 volumeSlider.addEventListener('input', () => {
     if (gainNode) gainNode.gain.value = volumeSlider.value;
@@ -90,8 +75,17 @@ pitchSlider.addEventListener('input', () => {
 });
 
 echoCheckbox.addEventListener('change', () => {
-    if (delayNode) delayNode.delayTime.value = echoCheckbox.checked ? 0.3 : 0;
+    if (echoNode) echoNode.delayTime.value = echoCheckbox.checked ? 0.5 : 0;
 });
 
-// Load a demo audio file (Replace with actual file URL)
-loadAudio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+// Dummy implementation for crop and record (actual implementations need more work)
+cropButton.addEventListener('click', () => {
+    alert('Crop functionality is not yet implemented.');
+});
+
+recordButton.addEventListener('click', () => {
+    alert('Record functionality is not yet implemented.');
+});
+
+// Load a demo audio file (You can replace this with your own)
+loadAudio('path_to_your_audio_file.mp3');
