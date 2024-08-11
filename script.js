@@ -2,6 +2,7 @@
 
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let audioBuffer, sourceNode, gainNode, pitchNode, echoNode;
+let isPlaying = false;
 
 // Elements
 const playButton = document.getElementById('play');
@@ -11,23 +12,23 @@ const volumeSlider = document.getElementById('volume');
 const pitchSlider = document.getElementById('pitch');
 const echoCheckbox = document.getElementById('echo');
 const cropButton = document.getElementById('crop');
+const recordButton = document.getElementById('record');
 
-// Load audio file (for demo, you need to implement file loading)
-function loadAudio(url) {
-    fetch(url)
-        .then(response => response.arrayBuffer())
-        .then(data => audioContext.decodeAudioData(data))
-        .then(buffer => {
-            audioBuffer = buffer;
-            createAudioGraph();
-        });
+async function loadAudio(url) {
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 }
 
 function createAudioGraph() {
+    if (sourceNode) sourceNode.disconnect();
+
     sourceNode = audioContext.createBufferSource();
     sourceNode.buffer = audioBuffer;
 
     gainNode = audioContext.createGain();
+    gainNode.gain.value = volumeSlider.value;
+
     pitchNode = audioContext.createBiquadFilter();
     pitchNode.type = 'allpass';
 
@@ -42,10 +43,12 @@ function createAudioGraph() {
     sourceNode.playbackRate.value = pitchSlider.value;
 }
 
-// Play, pause, and stop
 playButton.addEventListener('click', () => {
-    createAudioGraph();
-    sourceNode.start(0);
+    if (!isPlaying) {
+        createAudioGraph();
+        sourceNode.start(0);
+        isPlaying = true;
+    }
 });
 
 pauseButton.addEventListener('click', () => {
@@ -57,31 +60,32 @@ pauseButton.addEventListener('click', () => {
 });
 
 stopButton.addEventListener('click', () => {
-    if (sourceNode) {
+    if (isPlaying) {
         sourceNode.stop(0);
+        isPlaying = false;
     }
 });
 
-// Volume control
 volumeSlider.addEventListener('input', () => {
-    gainNode.gain.value = volumeSlider.value;
+    if (gainNode) gainNode.gain.value = volumeSlider.value;
 });
 
-// Pitch control
 pitchSlider.addEventListener('input', () => {
-    sourceNode.playbackRate.value = pitchSlider.value;
+    if (sourceNode) sourceNode.playbackRate.value = pitchSlider.value;
 });
 
-// Echo effect
 echoCheckbox.addEventListener('change', () => {
-    echoNode.delayTime.value = echoCheckbox.checked ? 0.5 : 0;
+    if (echoNode) echoNode.delayTime.value = echoCheckbox.checked ? 0.5 : 0;
 });
 
-// Cropping functionality
+// Dummy implementation for crop and record (actual implementations need more work)
 cropButton.addEventListener('click', () => {
-    // Implement cropping logic here
-    alert('Crop functionality is not implemented yet.');
+    alert('Crop functionality is not yet implemented.');
 });
 
-// Example usage
-loadAudio('your-audio-file-url-here');
+recordButton.addEventListener('click', () => {
+    alert('Record functionality is not yet implemented.');
+});
+
+// Load a demo audio file (You can replace this with your own)
+loadAudio('path_to_your_audio_file.mp3');
