@@ -1,76 +1,87 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // Initialize WaveSurfer instance
-    let wavesurfer = WaveSurfer.create({
-        container: '#waveform',
-        waveColor: 'violet',
-        progressColor: 'purple',
-        backend: 'WebAudio'
-    });
+// scripts.js
 
-    // Load audio file
-    document.getElementById('audioUpload').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let audioBuffer, sourceNode, gainNode, pitchNode, echoNode;
 
-        reader.onload = function(e) {
-            wavesurfer.loadBlob(new Blob([e.target.result]));
-        };
+// Elements
+const playButton = document.getElementById('play');
+const pauseButton = document.getElementById('pause');
+const stopButton = document.getElementById('stop');
+const volumeSlider = document.getElementById('volume');
+const pitchSlider = document.getElementById('pitch');
+const echoCheckbox = document.getElementById('echo');
+const cropButton = document.getElementById('crop');
 
-        reader.readAsArrayBuffer(file);
-    });
+// Load audio file (for demo, you need to implement file loading)
+function loadAudio(url) {
+    fetch(url)
+        .then(response => response.arrayBuffer())
+        .then(data => audioContext.decodeAudioData(data))
+        .then(buffer => {
+            audioBuffer = buffer;
+            createAudioGraph();
+        });
+}
 
-    // Play or Pause the audio
-    window.playPause = function() {
-        wavesurfer.playPause();
-    };
+function createAudioGraph() {
+    sourceNode = audioContext.createBufferSource();
+    sourceNode.buffer = audioBuffer;
 
-    // Stop the audio
-    window.stop = function() {
-        wavesurfer.stop();
-    };
+    gainNode = audioContext.createGain();
+    pitchNode = audioContext.createBiquadFilter();
+    pitchNode.type = 'allpass';
 
-    // Mute or Unmute the audio
-    window.muteTrack = function() {
-        wavesurfer.toggleMute();
-    };
+    echoNode = audioContext.createDelay();
+    echoNode.delayTime.value = echoCheckbox.checked ? 0.5 : 0;
 
-    // Adjust the volume
-    document.getElementById('volumeControl').addEventListener('input', function() {
-        wavesurfer.setVolume(this.value);
-    });
+    sourceNode.connect(gainNode);
+    gainNode.connect(pitchNode);
+    pitchNode.connect(echoNode);
+    echoNode.connect(audioContext.destination);
 
-    // Placeholder for Cut, Copy, Paste functionality
-    window.cutAudio = function() {
-        console.log("Cut functionality is not implemented yet.");
-    };
+    sourceNode.playbackRate.value = pitchSlider.value;
+}
 
-    window.copyAudio = function() {
-        console.log("Copy functionality is not implemented yet.");
-    };
-
-    window.pasteAudio = function() {
-        console.log("Paste functionality is not implemented yet.");
-    };
-
-    // Placeholder for project management functions
-    window.newProject = function() {
-        wavesurfer.empty();
-        console.log("New project started.");
-    };
-
-    window.saveProject = function() {
-        console.log("Save project functionality is not implemented yet.");
-    };
-
-    window.loadProject = function() {
-        console.log("Load project functionality is not implemented yet.");
-    };
-
-    window.exportProject = function() {
-        console.log("Export project functionality is not implemented yet.");
-    };
-
-    window.settings = function() {
-        console.log("Settings functionality is not implemented yet.");
-    };
+// Play, pause, and stop
+playButton.addEventListener('click', () => {
+    createAudioGraph();
+    sourceNode.start(0);
 });
+
+pauseButton.addEventListener('click', () => {
+    if (audioContext.state === 'running') {
+        audioContext.suspend();
+    } else {
+        audioContext.resume();
+    }
+});
+
+stopButton.addEventListener('click', () => {
+    if (sourceNode) {
+        sourceNode.stop(0);
+    }
+});
+
+// Volume control
+volumeSlider.addEventListener('input', () => {
+    gainNode.gain.value = volumeSlider.value;
+});
+
+// Pitch control
+pitchSlider.addEventListener('input', () => {
+    sourceNode.playbackRate.value = pitchSlider.value;
+});
+
+// Echo effect
+echoCheckbox.addEventListener('change', () => {
+    echoNode.delayTime.value = echoCheckbox.checked ? 0.5 : 0;
+});
+
+// Cropping functionality
+cropButton.addEventListener('click', () => {
+    // Implement cropping logic here
+    alert('Crop functionality is not implemented yet.');
+});
+
+// Example usage
+loadAudio('your-audio-file-url-here');
