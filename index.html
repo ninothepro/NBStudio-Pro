@@ -7,44 +7,40 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="traffic-lights-placeholder">
-        <!-- Placeholder for macOS-style traffic lights -->
-    </div>
-
-    <div class="app-container">
-        <h1>Web Audio Editor</h1>
-        <ul>
-            <li>New Project</li>
-            <li>Open Project</li>
-            <li>Save Project</li>
-            <li>Export</li>
-            <li>Import Audio</li>
-        </ul>
-
-        <div class="controls">
-            <button id="play">Play</button>
-            <button id="pause">Pause</button>
-            <button id="stop">Stop</button>
+    <div class="container">
+        <header>
+            <h1>Web Audio Editor</h1>
+        </header>
+        <div class="sidebar">
+            <ul>
+                <li>New Project</li>
+                <li>Open Project</li>
+                <li>Save Project</li>
+                <li>Export</li>
+                <li>Import Audio</li>
+            </ul>
         </div>
-
-        <div id="audio-visualization">
-            <!-- This will be used for waveform visualization or any other audio visualization -->
-        </div>
-
-        <div class="sliders">
-            <label for="volume">Volume:</label>
-            <input type="range" id="volume" min="0" max="2" value="1" step="0.01">
-
-            <label for="pitch">Pitch:</label>
-            <input type="range" id="pitch" min="0.5" max="2" value="1" step="0.01">
-
-            <label for="echo">Echo:</label>
-            <input type="checkbox" id="echo">
-
-            <button id="crop">Crop</button>
-            <button id="record-voiceover">Record Voice Over</button>
+        <div class="main">
+            <div class="toolbar">
+                <button id="play">Play</button>
+                <button id="pause">Pause</button>
+                <button id="stop">Stop</button>
+            </div>
+            <div class="track-container">
+                <canvas id="waveform"></canvas>
+            </div>
+            <div class="controls">
+                <label>Volume:</label>
+                <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
+                <label>Pitch:</label>
+                <input type="range" id="pitch" min="0.5" max="2" step="0.01" value="1">
+                <label>Echo:</label>
+                <input type="checkbox" id="echo">
+                <button id="crop">Crop</button>
+                <button id="record">Record Voice Over</button>
+            </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
